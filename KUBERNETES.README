@@ -1,0 +1,247 @@
+Kubernetes CLI Configuration and Visibility
+GitHub Repository Documentation
+A lightweight Python command-line tool for inspecting local Kubernetes YAML and JSON manifests. It identifies Pods and
+Namespaces, extracts container CPU and memory requests and limits, and displays the results in a structured terminal
+table.
+The tool clearly distinguishes between missing resource values and explicitly declared zero values, and reports parsing
+errors without requiring a live Kubernetes cluster.
+Table of Contents
+• [Overview](#overview)
+• [Problem Statement](#problem-statement)
+• [Features](#features)
+• [Scope and Limitations](#scope-and-limitations)
+• [Technology Stack](#technology-stack)
+• [How It Works](#how-it-works)
+• [Resource Value Display](#resource-value-display)
+• [Installation](#installation)
+• [Usage](#usage)
+• [Example Output](#example-output)
+• [Testing](#testing)
+• [Project Goals](#project-goals)
+• [Future Enhancements](#future-enhancements)
+• [Project Structure](#project-structure)
+• [References](#references)
+Overview
+Kubernetes applications use YAML and JSON manifest files to define infrastructure, Pods, Namespaces, and resource
+configurations. As repositories grow, manually reviewing multiple files to find resource settings can become
+time-consuming.
+This project provides a local CLI tool that reads and analyzes Kubernetes manifest files. It extracts relevant resource
+information and presents it in a clear terminal table, making configuration review easier.
+Problem Statement
+Developers often need to inspect several Kubernetes manifest files to find:
+• Pod and Namespace information.
+• Container names.
+• CPU requests and limits.
+• Memory requests and limits.
+• Resource values that are missing.
+KUBERNETES CLI CONFIGURATION AND VISIBILITY 2
+• Resource values explicitly set to zero.
+Manual inspection can be repetitive and error-prone. This tool automates the inspection process and makes the difference
+between an unconfigured value and an explicit zero value 
+Features
+• Read local Kubernetes YAML and JSON manifest files.
+• Process multiple files and multi-document YAML streams.
+• Identify supported Kubernetes resource kinds: Pod and Namespace.
+• Extract resource names, namespaces, labels, and container names.
+• Extract CPU and memory requests and limits.
+• Preserve the original Kubernetes quantity strings, such as 500m,
+1Gi, and 256Mi.
+• Distinguish missing or null values from explicit zero values.
+• Display extracted information in an aligned terminal table.
+• Sort output by namespace and resource name.
+• Report file access and parsing errors.
+• Continue processing other documents where possible when an
+individual document is invalid.
+Scope and Limitations
+Supported in the initial version
+• Local YAML and JSON files.
+• Multi-document YAML streams separated by ---.
+• Pod and Namespace resource kinds.
+• Container CPU and memory requests and limits.
+• Offline manifest inspection.
+Not included in the initial version
+• Connecting to a live Kubernetes cluster.
+• Reading Kubernetes cluster credentials or kubeconfig contexts.
+• Monitoring the real-time status of running Pods.
+• Modifying manifest files.
+• Deploying or managing Kubernetes resources.
+This project inspects local configuration files only. It does not determine the operational status of a live
+Kubernetes cluster.
+Technology Stack
+----------------------------------------------------------------------- Technology Purpose -----------------------------------
+----------------------------------- Python 3 Main programming language
+argparse Command-line argument handling
+PyYAML Safe YAML parsing
+json JSON manifest parsing
+KUBERNETES CLI CONFIGURATION AND VISIBILITY 3
+Python dataclasses Structured storage of extracted resource information
+pytest / unittest Automated testing
+Git Version control
+GitHub Source code hosting
+GitHub Actions Continuous integration and automated testing
+Markdown Project documentation -----------------------------------------------------------------------
+How It Works
+The tool follows this processing flow:
+Input: The user provides one or more local YAML or JSON manifest
+file paths through the CLI.
+Validation: The tool checks whether the files exist and can be
+accessed.
+Parsing: YAML is processed with yaml.safe_load_all() and JSON
+with Python's standard JSON parser.
+Document validation: Kubernetes object fields such as
+apiVersion, kind, and metadata are checked.
+Resource identification: Supported resource kinds, Pod and
+Namespace, are identified. Unsupported kinds are skipped and counted.
+Data extraction: Metadata, container names, CPU requests and
+limits, and memory requests and limits are extracted.
+Normalization: Extracted values are organized into structured
+records. Missing, null, zero, and configured values are distinguished.
+Output: Records are sorted and displayed in a readable terminal
+table, with diagnostics and a summary.
+Processing Architecture
+Kubernetes YAML / JSON Manifests
+ |
+ v
+ CLI Argument Parser
+ |
+ v
+ File Validation
+ |
+ v
+ Safe File Parser
+ |
+ v
+ Kubernetes Resource Identification
+ |
+ v
+ Metadata and Resource Extraction
+ |
+ v
+ Data Normalization
+ |
+ v
+ Terminal Table Renderer
+ |
+ v
+ Results / Diagnostics / Exit Status
+KUBERNETES CLI CONFIGURATION AND VISIBILITY 4
+Resource Value Display
+One of the main requirements is to distinguish between a resource value that is not configured and a resource value
+explicitly set to zero.
+----------------------------------------------------------------------- State Meaning Display ----------------------- -----------------------
+----------------------- Configured A valid resource Original value, quantity is declared e.g. 500m
+Explicit zero The resource key exists 0 and is set to zero
+Missing or null The resource key is [NONE] absent or its value is null -----------------------------------------------------------------------
+This avoids treating a missing configuration as if it were an explicitly configured zero.
+Installation
+Prerequisites
+• Python 3.10 or later is recommended.
+• pip for installing Python dependencies.
+• Git to clone the repository.
+Clone the repository
+git clone <your-repository-url>
+cd <your-repository-folder>
+Replace the placeholders with your actual GitHub repository URL and folder name.
+Create and activate a virtual environment
+macOS / Linux
+python3 -m venv .venv
+source .venv/bin/activate
+Windows
+py -m venv .venv
+.venv\Scripts\activate
+Install dependencies
+python -m pip install PyYAML
+Testing dependencies can be installed with:
+python -m pip install pytest
+The exact installation and run commands may be updated as the project
+implementation is completed.
+Usage
+The planned CLI accepts one or more manifest file paths. The following examples illustrate the intended command format;
+use the command name and options implemented in the repository.
+python <cli-entrypoint>.py path/to/manifest.yaml
+Pass multiple files:
+python <cli-entrypoint>.py path/to/pods.yaml path/to/namespaces.json
+Display help:
+python <cli-entrypoint>.py --help
+The CLI entry-point filename and exact command syntax should be updated here once they are finalized in the
+implementation.
+KUBERNETES CLI CONFIGURATION AND VISIBILITY 5
+Example Output
+The terminal report is intended to show the resource, namespace, container, and CPU/memory request and limit
+information.
+Illustrative layout:
++-----------+-----------+-----------+-------------+----------+---------------+------------+
+| Namespace | Pod | Container | CPU Request | CPU Limit| Memory Request| Memory Limit|
++-----------+-----------+-----------+-------------+----------+---------------+------------+
+| default | web-pod | web | 250m | 500m | 128Mi | 256Mi |
+| default | worker | worker | [NONE] | 0 | 256Mi | [NONE] |
++-----------+-----------+-----------+-------------+----------+---------------+------------+
+This is an illustrative example of the planned output format, not a captured result from a completed implementation.
+Testing
+The project plans to include the following tests.
+Unit testing
+• Valid YAML and JSON files.
+• Deeply nested configuration structures.
+• Multi-document YAML files.
+• Missing, null, and zero resource values.
+• Invalid file paths and permission errors.
+• Malformed configuration files.
+Integration testing
+• Complete CLI workflow.
+• Extraction from representative Kubernetes manifests.
+• Terminal table formatting.
+• Output and error handling.
+• CLI exit-code behavior.
+End-to-end testing
+Run the tool against a test directory containing 50 or more mixed YAML and JSON manifest files. Verify resource totals,
+skipped resource counts, parsing results, and terminal output.
+Project Goals
+The target goals defined for the project are:
+Metric Target ------------------------------ ---------------------------------------------- Must-have feature completion 100% Automated
+test coverage At least 85% Processing time Under 2 seconds for 1,000 declared resources Memory consumption Target
+below 50 MB RSS Error handling Graceful handling of malformed input files Missing vs. zero distinction No ambiguous
+states
+These are project targets to be validated through testing and benchmarking.
+Future Enhancements
+After the core requirements are completed, possible enhancements include:
+• Machine-readable JSON output: Add a --json option for
+downstream tools and CI pipelines.
+• Recursive directory scanning: Scan directories and their
+KUBERNETES CLI CONFIGURATION AND VISIBILITY 6
+subdirectories for manifest files.
+• Standard input support: Accept manifests through stdin.
+• More workload controllers: Inspect Pod templates in Deployments,
+StatefulSets, and DaemonSets.
+• Resource quantity conversion: Convert CPU quantities to cores
+and memory quantities to MiB/GiB for easier comparison.
+• Cross-platform CI: Run automated tests on Ubuntu, macOS, and
+Windows.
+Project Structure
+A possible repository structure is:
+kubernetes-cli-configuration-visibility/
+■■■ README.md
+■■■ requirements.txt
+■■■ src/
+■ ■■■ ...
+■■■ tests/
+■ ■■■ ...
+■■■ samples/
+■ ■■■ ...
+■ ■■■ ...
+■■■ .github/
+ ■■■ workflows/
+ ■■■ ...
+This is a suggested starting structure. Update it to match the actual files and folders in the repository.
+References
+• Kubernetes Documentation
+• PyYAML Documentation
+• [Python argparse
+Documentation](https://docs.python.org/3/library/argparse.html)
+• pytest Documentation
+• [Kubernetes GitHub
+Repository](https://github.com/kubernetes/kubernetes)
+------------------------------------------------------------------------
+Project: Kubernetes CLI Configuration and Visibility\ Author: Nakkala Praneeth  
+  
+  
+  
