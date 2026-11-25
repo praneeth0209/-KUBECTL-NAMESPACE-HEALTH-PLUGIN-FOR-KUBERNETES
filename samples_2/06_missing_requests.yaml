@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+
+metadata:
+  name: missing-requests-pod
+  namespace: testing
+
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+      resources:
+        limits:
+          cpu: "500m"
+          memory: "256Mi"

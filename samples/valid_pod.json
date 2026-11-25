@@ -4,5 +4,23 @@
   "metadata": {
     "name": "json-test-pod",
     "namespace": "testing"
+  },
+  "spec": {
+    "containers": [
+      {
+        "name": "nginx",
+        "image": "nginx:latest",
+        "resources": {
+          "requests": {
+            "cpu": "250m",
+            "memory": "128Mi"
+          },
+          "limits": {
+            "cpu": "500m",
+            "memory": "256Mi"
+          }
+        }
+      }
+    ]
   }
 }

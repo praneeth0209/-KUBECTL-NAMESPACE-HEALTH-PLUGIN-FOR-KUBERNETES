@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: null-requests-pod
+  namespace: testing
+spec:
+  containers:
+    - name: nginx
+      image: nginx:latest
+      resources:
+        requests: null
+        limits:
+          cpu: "500m"
+          memory: "256Mi"

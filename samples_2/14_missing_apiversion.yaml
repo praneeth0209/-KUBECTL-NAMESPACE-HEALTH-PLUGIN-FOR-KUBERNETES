@@ -1,0 +1,7 @@
+kind: Pod
+metadata:
+  name: missing-api-pod
+  namespace: testing
+spec:
+  containers:
+    - name: nginx

@@ -1,0 +1,8 @@
+apiVersion: 123
+kind: Pod
+metadata:
+  name: invalid-api-type-pod
+  namespace: testing
+spec:
+  containers:
+    - name: nginx

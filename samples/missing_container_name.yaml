@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: missing-container-name-pod
+  namespace: testing
+spec:
+  containers:
+    - image: nginx:latest
+      resources:
+        requests:
+          cpu: "250m"
