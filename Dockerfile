@@ -12,8 +12,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application files
 COPY . .
 
-# Flask application port
-EXPOSE 5000
+# Application port
+EXPOSE 10000
 
-# Start the production-style web server
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
+# Start Gunicorn using the hosting platform's assigned port
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${PORT:-10000} app:app"]
