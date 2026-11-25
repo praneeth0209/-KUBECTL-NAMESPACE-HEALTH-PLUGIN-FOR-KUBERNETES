@@ -1,0 +1,8 @@
+apiVersion: null
+kind: Pod
+metadata:
+  name: null-api-pod
+  namespace: testing
+spec:
+  containers:
+    - name: nginx

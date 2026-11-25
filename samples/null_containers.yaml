@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: null-containers-pod
+  namespace: testing
+spec:
+  containers: null

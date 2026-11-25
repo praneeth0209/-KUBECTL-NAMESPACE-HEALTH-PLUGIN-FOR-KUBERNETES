@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Pod
+
+metadata:
+  name: first-pod
+  namespace: testing
+
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+      resources:
+        requests:
+          cpu: "250m"
+          memory: "128Mi"
+        limits:
+          cpu: "500m"
+          memory: "256Mi"
+
+---
+apiVersion: v1
+kind: Namespace
+
+metadata:
+  name: development
+
+---
+apiVersion: v1
+kind: Pod
+
+metadata:
+  name: second-pod
+  namespace: development
+
+spec:
+  containers:
+    - name: redis
+      image: redis
+      resources:
+        requests:
+          cpu: "100m"
+          memory: "64Mi"
+        limits:
+          cpu: "200m"
+          memory: "128Mi"
