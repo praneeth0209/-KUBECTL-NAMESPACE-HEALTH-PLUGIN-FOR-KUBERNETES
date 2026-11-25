@@ -11,4 +11,11 @@ __pycache__/
 htmlcov/
 
 # macOS system files
+.DS_Storesamples.zip
+
+# macOS files
 .DS_Store
+**/.DS_Store
+
+# Sample archive
+samples.zip
