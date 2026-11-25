@@ -1,6 +1,15 @@
 
 ![Kubernetes Namespace Health Plugin](assets/readme-banner.png)
 
+
+## Live Demo
+
+**Try the deployed application:**  
+https://kubernetes-namespace-health.onrender.com
+
+Upload a Kubernetes YAML, YML, or JSON manifest to analyze CPU and memory resource configurations directly in your browser.
+
+
 # Kubernetes Namespace Health Plugin
 
 ## Project Overview
