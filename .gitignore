@@ -12,3 +12,11 @@ htmlcov/
 
 # macOS system files
 .DS_Store
+samples.zip
+
+# macOS files
+.DS_Store
+**/.DS_Store
+
+# Sample archive
+samples.zip
