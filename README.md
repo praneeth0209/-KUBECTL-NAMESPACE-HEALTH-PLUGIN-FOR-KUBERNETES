@@ -108,6 +108,42 @@ python -m coverage run -m unittest discover -s tests
 python -m coverage report -m --include="main.py"
 ```
 
+## Docker Usage
+
+The Kubernetes Configuration Analyzer can run inside a Docker container without requiring users to install Python dependencies directly.
+
+### Build the Docker Image
+
+```bash
+docker build -t kubernetes-namespace-health:0.1.0 .
+```
+
+### Display CLI Help
+
+```bash
+docker run --rm kubernetes-namespace-health:0.1.0 --help
+```
+
+### Analyze a YAML Manifest
+
+```bash
+docker run --rm -v "$PWD/samples:/manifests:ro" kubernetes-namespace-health:0.1.0 /manifests/realistic-pod.yaml
+```
+
+### Analyze a JSON Manifest
+
+```bash
+docker run --rm -v "$PWD/samples:/manifests:ro" kubernetes-namespace-health:0.1.0 /manifests/valid_pod.json
+```
+
+### Docker Notes
+
+- The image packages the Python CLI and its dependencies.
+- Local YAML and JSON manifests are supplied through a volume mount.
+- The mounted manifest directory is read-only.
+- Results are printed directly in the terminal.
+- No Kubernetes cluster connection or web server is required.
+
 
 
 ## Step 11 — Project Scope
